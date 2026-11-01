@@ -21,7 +21,7 @@ import java.util.Map;
 @RestControllerAdvice(basePackages = "com.shun.gu_li_mall")
 public class GlobalExceptionHandler {
 
-    /** @RequestBody 参数校验失败 */
+    /** {@code @RequestBody} 参数校验失败 */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public R<Map<String, String>> handleValidException(MethodArgumentNotValidException e) {
         Map<String, String> errors = new LinkedHashMap<>();
