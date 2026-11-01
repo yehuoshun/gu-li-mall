@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
         e.getBindingResult().getFieldErrors()
                 .forEach(fe -> errors.put(fe.getField(), fe.getDefaultMessage()));
         log.warn("参数校验失败: {}", errors);
-        return R.error(BizCodeEnume.VAILD_EXCEPTION).put("data", errors);
+        return R.error(BizCodeEnum.VALID_EXCEPTION).put("data", errors);
     }
 
     /** GET/表单绑定参数校验失败（旧版未覆盖的入口） */
@@ -38,13 +38,13 @@ public class GlobalExceptionHandler {
         e.getBindingResult().getFieldErrors()
                 .forEach(fe -> errors.put(fe.getField(), fe.getDefaultMessage()));
         log.warn("参数绑定校验失败: {}", errors);
-        return R.error(BizCodeEnume.VAILD_EXCEPTION).put("data", errors);
+        return R.error(BizCodeEnum.VALID_EXCEPTION).put("data", errors);
     }
 
     /** 未知异常兜底 */
     @ExceptionHandler(Throwable.class)
     public R<Void> handleException(Throwable e) {
         log.error("系统异常", e);
-        return R.error(BizCodeEnume.UNKNOW_EXCEPTION);
+        return R.error(BizCodeEnum.UNKNOWN_EXCEPTION);
     }
 }

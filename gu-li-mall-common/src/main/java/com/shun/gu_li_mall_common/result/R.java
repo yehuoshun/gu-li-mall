@@ -3,7 +3,7 @@ package com.shun.gu_li_mall_common.result;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.shun.gu_li_mall_common.exception.BizCodeEnume;
+import com.shun.gu_li_mall_common.exception.BizCodeEnum;
 import com.shun.gu_li_mall_common.utils.JacksonUtils;
 import lombok.Data;
 
@@ -24,7 +24,7 @@ public class R<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /** 状态码：0 成功，非 0 失败（码表见 {@link BizCodeEnume}） */
+    /** 状态码：0 成功，非 0 失败（码表见 {@link BizCodeEnum}） */
     private Integer code;
 
     /** 提示信息 */
@@ -58,7 +58,7 @@ public class R<T> implements Serializable {
         return new R<>(code, msg);
     }
 
-    public static <T> R<T> error(BizCodeEnume enume) {
+    public static <T> R<T> error(BizCodeEnum enume) {
         return new R<>(enume.getCode(), enume.getMsg());
     }
 
