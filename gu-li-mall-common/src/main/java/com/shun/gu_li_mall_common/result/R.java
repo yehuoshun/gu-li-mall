@@ -60,8 +60,8 @@ public class R<T> implements Serializable {
         return new R<>(code, msg);
     }
 
-    public static <T> R<T> error(BizCodeEnum enume) {
-        return new R<>(enume.getCode(), enume.getMsg());
+    public static <T> R<T> error(BizCodeEnum enums) {
+        return new R<>(enums.getCode(), enums.getMsg());
     }
 
     // ─── 兼容旧式链式调用（搬旧代码过渡期）───
