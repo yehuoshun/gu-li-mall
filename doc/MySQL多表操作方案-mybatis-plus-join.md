@@ -209,4 +209,4 @@ new MPJLambdaWrapper<>(CouponEntity.class)
 - Gitee：https://gitee.com/mhb0409/mybatis-plus-join
 - GitHub：https://github.com/bobo667/mybatis-plus-join
 - Maven Central 坐标核验：`icu.mhb:mybatis-plus-join-boot-starter:2.1.0`
-- 谷粒商城表结构依据：本仓库 `doc/数据库/gulimall_{pms,oms,wms,ums,sms,admin}.sql`
+- 谷粒商城表结构依据：本仓库 `doc/数据库/gu_li_mall_{pms,oms,wms,ums,sms,admin}.sql`
