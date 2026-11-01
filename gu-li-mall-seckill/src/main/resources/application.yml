@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: gu-li-mall-seckill
+server:
+  port: 10080

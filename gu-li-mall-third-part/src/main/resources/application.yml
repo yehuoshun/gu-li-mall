@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: gu-li-mall-third-part
+server:
+  port: 10100

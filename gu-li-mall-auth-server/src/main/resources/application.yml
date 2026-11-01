@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: gu-li-mall-auth-server
+server:
+  port: 10090

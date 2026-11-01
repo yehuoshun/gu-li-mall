@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: gu-li-mall-coupon
+server:
+  port: 10030

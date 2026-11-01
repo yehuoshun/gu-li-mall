@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: gu-li-mall-search
+server:
+  port: 10060

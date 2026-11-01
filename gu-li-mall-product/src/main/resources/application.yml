@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: gu-li-mall-product
+server:
+  port: 10010

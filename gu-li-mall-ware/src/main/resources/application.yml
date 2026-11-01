@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: gu-li-mall-ware
+server:
+  port: 10040

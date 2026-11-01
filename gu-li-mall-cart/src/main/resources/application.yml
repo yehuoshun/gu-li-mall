@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: gu-li-mall-cart
+server:
+  port: 10070
