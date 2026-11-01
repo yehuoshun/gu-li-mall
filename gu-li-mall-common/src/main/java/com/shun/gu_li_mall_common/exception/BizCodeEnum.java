@@ -11,7 +11,7 @@ import lombok.Getter;
  * @author yehuoshun
  */
 @Getter
-@SuppressWarnings("unuesd")
+@SuppressWarnings("unused")
 public enum BizCodeEnum {
 
     UNKNOWN_EXCEPTION(10000, "系统未知异常"),

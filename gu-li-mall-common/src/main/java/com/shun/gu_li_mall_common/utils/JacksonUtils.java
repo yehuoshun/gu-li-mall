@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
  *
  * @author yehuoshun
  */
+@SuppressWarnings("unused")
 public final class JacksonUtils {
 
     private static final ObjectMapper MAPPER = new ObjectMapper()

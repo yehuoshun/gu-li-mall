@@ -5,5 +5,6 @@ package com.shun.gu_li_mall_common.valid;
  *
  * @author yehuoshun
  */
+@SuppressWarnings("unused")
 public interface UpdateGroup {
 }

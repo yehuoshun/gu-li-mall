@@ -21,6 +21,7 @@ import java.util.Map;
  * @author yehuoshun
  */
 @Data
+@SuppressWarnings("unused")
 public class R<T> implements Serializable {
 
     @Serial
