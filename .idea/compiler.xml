@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="gu-li-mall-gateway" />
+        <module name="gu-li-mall-search" />
+        <module name="gu-li-mall-coupon" />
+        <module name="gu-li-mall-common" />
+        <module name="gu-li-mall-product" />
+        <module name="gu-li-mall-cart" />
+        <module name="gu-li-mall-seckill" />
+        <module name="gu-li-mall-third-part" />
+        <module name="gu-li-mall-member" />
+        <module name="gu-li-mall-order" />
+        <module name="gu-li-mall-auth-server" />
+        <module name="gu-li-mall-ware" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="gu-li-mall-auth-server" options="-parameters" />
+      <module name="gu-li-mall-cart" options="-parameters" />
+      <module name="gu-li-mall-common" options="-parameters" />
+      <module name="gu-li-mall-coupon" options="-parameters" />
+      <module name="gu-li-mall-gateway" options="-parameters" />
+      <module name="gu-li-mall-member" options="-parameters" />
+      <module name="gu-li-mall-order" options="-parameters" />
+      <module name="gu-li-mall-product" options="-parameters" />
+      <module name="gu-li-mall-search" options="-parameters" />
+      <module name="gu-li-mall-seckill" options="-parameters" />
+      <module name="gu-li-mall-third-part" options="-parameters" />
+      <module name="gu-li-mall-ware" options="-parameters" />
+    </option>
+  </component>
+</project>
