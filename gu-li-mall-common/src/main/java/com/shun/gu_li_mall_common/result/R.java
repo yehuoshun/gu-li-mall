@@ -7,6 +7,7 @@ import com.shun.gu_li_mall_common.exception.BizCodeEnum;
 import com.shun.gu_li_mall_common.utils.JacksonUtils;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -22,6 +23,7 @@ import java.util.Map;
 @Data
 public class R<T> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /** 状态码：0 成功，非 0 失败（码表见 {@link BizCodeEnum}） */
@@ -85,7 +87,7 @@ public class R<T> implements Serializable {
         return this;
     }
 
-    /** 取业务数据（Jackson 版，替代旧 fastjson 用法） */
+    /** 取业务数据（Jackson 版，替代旧 fastJson 用法） */
     public <E> E getData(TypeReference<E> typeReference) {
         return JacksonUtils.fromJson(JacksonUtils.toJson(getData()), typeReference);
     }
