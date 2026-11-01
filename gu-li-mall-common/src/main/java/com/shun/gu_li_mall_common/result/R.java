@@ -66,6 +66,15 @@ public class R<T> implements Serializable {
 
     // ─── 兼容旧式链式调用（搬旧代码过渡期）───
 
+    /**
+     * 兼容旧式链式调用（搬旧代码过渡期）。
+     *
+     * @param key   键；"data" 写入 {@link #data}，其余写入 {@link #ext}
+     * @param value 值
+     * @return this（保证链式调用不断）
+     * @implNote 泛型擦除使 {@code (T) value} 无法在编译期验证，调用方需自行保证类型一致
+     */
+    @SuppressWarnings("unchecked")
     public R<T> put(String key, Object value) {
         if ("data".equals(key)) {
             this.data = (T) value;
@@ -97,6 +106,7 @@ public class R<T> implements Serializable {
         return ext;
     }
 
+    @SuppressWarnings("unchecked")
     @JsonAnySetter
     public void setExt(String key, Object value) {
         if ("data".equals(key)) {
