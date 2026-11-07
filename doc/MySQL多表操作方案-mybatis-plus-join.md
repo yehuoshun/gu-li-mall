@@ -14,6 +14,47 @@
 
 ---
 
+## 〇.1、实测更新（2026-11-07，沙箱内真跑过）
+
+> 本文档初稿（2026-11-01）的两条关键结论已被实测推翻/修正，**以本节为准**。
+> 验证工程：`tmp/mpj-verify`（Spring Boot 3.5.16 + MP 3.5.18 + MPJ 2.1.3 + H2，3 个用例全绿）。
+
+| 初稿说法 | 实测结论 |
+|---|---|
+| Central 最新只有 2.1.0，2.1.3 未同步 | ❌ **2.1.3 已在 Central**（`icu.mhb:mybatis-plus-join-boot-starter:2.1.3`，含 core / processor） |
+| Boot 3 下自动配置「大概率不生效」 | ✅ **生效**。starter 2.1.3 的 jar 里同时有 `META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports` → `MybatisPlusJoinAutoConfig`；实测启动日志：`joinDefaultSqlInjectorOnMiss -> JoinDefaultSqlInjector` 已注册，join 查询正常返回 |
+| MP 兼容上限（Gitee 表只写到 3.5.10+） | ✅ **MP 3.5.18 也能跑**（比其编译基线 3.5.11 高 7 个小版本）：join 单查 / 分页 join 均正常 |
+| 需要引 `mybatis-plus-boot-starter`（Boot2）的风险 | ✅ 无忧：MPJ 对 `mybatis-plus-boot-starter` / `mybatis-plus-extension` 都是 **provided**，不传递；其自身 pom 导入的 Boot 2.5.3 BOM 只作用于自己，消费者侧的 `spring-boot-starter-parent` dependencyManagement 优先，仍是 Boot 3.5.16 |
+
+**实测 API 形态**（与第三节的示意不同，以这个为准）：
+
+```java
+public interface UserMapper extends JoinBaseMapper<User> { }        // BaseMapper → JoinBaseMapper
+
+JoinLambdaWrapper<User> wrapper = new JoinLambdaWrapper<>(User.class);
+wrapper.selectAll()                                                 // 主表全字段（无 selectAll(Class) 这种重载）
+       .leftJoin(Dept.class, Dept::getId, User::getDeptId)          // 返回 JoinWrapper<Dept, User>
+       .select(Dept::getDeptName)                                   // 关联表字段在这里选
+       .end()                                                       // 回主 wrapper 继续加条件
+       .eq(User::getId, 1L);
+
+List<UserVo> list = userMapper.joinSelectList(wrapper, UserVo.class);
+// 分页：userMapper.joinSelectPage(new Page<>(1, 10), wrapper, UserVo.class)
+```
+
+生成 SQL：`SELECT t_user.name,t_user.dept_id,t_user.id,t_dept.dept_name FROM t_user t_user LEFT JOIN t_dept t_dept ON t_dept.id = t_user.dept_id WHERE (t_user.id = ?)`
+→ 扁平 VO 字段名与列别名一致即自动映射（`t_dept.dept_name` → `deptName`）。
+
+**新踩到的坑（初稿没写）**：
+
+1. **join 目标实体必须有 Mapper**，否则 `leftJoin(Brand.class, ...)` 直接 NPE（`TableInfo` 为 null）——只给主表建 Mapper 不够。
+2. **分页 count 默认去掉 join**（`optimizeJoin=true`），实测 count 语句为 `SELECT COUNT(*) AS total FROM t_user t_user`；一对多分页会算错总数，需 `setOptimizeJoin(false)` + `distinct()`。
+3. 分页 SQL 实测为直连 `... LIMIT ?`（非嵌套子查询），简单 join 场景性能可接受。
+
+**落地结论**：MPJ 已入 `gu-li-mall-common-datasource`（所有连库模块自动获赠），无需 core + 手写自动配置（初稿的 B2 方案），也不用退到 B1/B3。
+
+---
+
 ## 一、MPJ 是什么
 
 | 项       | 内容                                                                                                                          |
@@ -192,6 +233,9 @@ new MPJLambdaWrapper<>(CouponEntity.class)
 | 3    | 验证自动配置是否生效（Boot 3 风险点）                                             | `JoinWrappers` 不抛异常即通过 |
 | 4    | 回归原接口（与旧实现结果比对）                                                    | 数据一致                      |
 | 5    | 记录结果，决定是否全项目铺开                                                      | 结论写回本文档                |
+
+> **试点状态（2026-11-07）**：已在等价工程（Boot 3.5.16 + MP 3.5.18 + MPJ 2.1.3 + H2）跑通步骤 1、3——join 单查与分页 join 均正常，自动配置生效；结论见本文档 **〇.1 实测更新**。已铺开：MPJ 入 `gu-li-mall-common-datasource`（6 个连库模块自动获赠）。
+
 
 ### 7.3 备选方案（Boot 3 验证不过时的退路）
 
