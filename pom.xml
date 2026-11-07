@@ -83,17 +83,16 @@
             <version>${maven-compiler-plugin.version}</version>
             <configuration>
                 <annotationProcessorPaths>
-                    <!-- ⚠️ 一旦显式声明 annotationProcessorPaths，classpath 上的处理器就不再被扫描，
-                         所以 lombok 必须一并列上，否则 @Data/@Getter/@Slf4j 全部失效 -->
+                    <!--
+                      只保留 lombok。
+                      说明：显式声明 annotationProcessorPaths 会关闭 classpath 上的处理器扫描，
+                      所以 lombok 必须列在这里；MPJ 的 chain 生成器（mybatis-plus-join-processor）
+                      已按 2026-11-07 的决策移除——链式模式不用，统一走 Lambda 版 JoinLambdaWrapper。
+                    -->
                     <path>
                         <groupId>org.projectlombok</groupId>
                         <artifactId>lombok</artifactId>
                         <version>${lombok.version}</version>
-                    </path>
-                    <path>
-                        <groupId>icu.mhb</groupId>
-                        <artifactId>mybatis-plus-join-processor</artifactId>
-                        <version>${mybatis-plus-join.version}</version>
                     </path>
                 </annotationProcessorPaths>
             </configuration>

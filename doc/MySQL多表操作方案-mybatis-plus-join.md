@@ -134,28 +134,50 @@ List<UserVo> list = userMapper.joinSelectList(wrapper, UserVo.class);
 
 ---
 
-### 三.1 chain 链式模式（APT 生成，2026-11-07 引入）
+### 三.1 chain 链式模式：**不采用**（2026-11-07 决策）
 
-- 依赖：`icu.mhb:mybatis-plus-join-processor`（版本随 starter，2.1.3），根 pom `<dependencyManagement>` 管版本。
-- ⚠️ **APT 的声明位置很关键**：注解处理器是「编译期 + 按模块」生效，**且 `provided` 作用域不传递** ——
-  只把 processor 放 `gu-li-mall-common-datasource` 里，业务模块给实体加 `@JoinChainModel` 也**不会**生成链式类。
-  → 已放 **根 pom 的 `<dependencies>`（scope=provided）**：一句覆盖全部 13 个模块，且不进最终产物。
-- 用法：实体加 `@JoinChainModel` → 编译期生成 `<实体包>.chain.<实体名>Chain`。
-- 实测生成物（H2 验证工程的 User 实体，`target/generated-sources/annotations/verify/entity/chain/UserChain.java`）：
+**结论：不用 MPJ 的 chain（链式模式），也不用任何注解处理器（APT）。多表查询统一走 Lambda 版。**
+
+用法（已实测，Boot 3.5.16 + MP 3.5.18 + MPJ 2.1.3）：
 
 ```java
-package verify.entity.chain;
-public class UserChain extends BaseChainModel<UserChain> {
-    public static UserChain create() { return new UserChain(); }
-    public UserChain id(Object val) { ... }        // 链式赋值（条件）
-    public ChainFieldData _id() { ... }            // 字段元数据，供 select / join 使用
-}
+// Mapper 由 BaseMapper 换成 JoinBaseMapper
+public interface SpuInfoMapper extends JoinBaseMapper<SpuInfo> { }
+
+// 一次 join 取 SPU + 品牌名（类型安全：Lambda 引用实体字段，编译期查错）
+JoinLambdaWrapper<SpuInfo> wrapper = new JoinLambdaWrapper<>(SpuInfo.class);
+wrapper.selectAll()                                                  // 主表全字段
+       .leftJoin(Brand.class, Brand::getBrandId, SpuInfo::getBrandId) // 关联条件
+       .select(Brand::getBrandName)                                  // 关联表字段在 JoinWrapper 上选
+       .end()                                                        // 回主 wrapper 继续加条件
+       .eq(SpuInfo::getSpuId, spuId);
+
+List<SpuInfoVo> list = spuInfoMapper.joinSelectList(wrapper, SpuInfoVo.class);   // 列表
+// 分页：spuInfoMapper.joinSelectPage(new Page<>(1, 10), wrapper, SpuInfoVo.class)
 ```
 
-- 查询入口：`Joins.chain(UserChain.create())` → `JoinChainQueryWrapper`，支持
-  `selectAll(chainModel)` / `selectAs` / `eq(fn)` / `oneToOneSelect` / `manyToManySelect` / `join(ChainFieldData, ChainFieldData, ...)`。
-- 验证状态：**APT 生成已实测通过**（Boot 3.5.16 + MP 3.5.18 下 `mvn compile` 确实产出 `UserChain.java`）；
-  链式查询的运行时用例待补（Lambda 模式已全量验证：join / 分页 join 均通过）。
+#### 为什么不用 chain（决策依据）
+
+| # | 原因 |
+|---|---|
+| 1 | **官方生成器命名不合规**：字段引用方法被硬编码为 `_id()` / `_deptId()`（`JoinChainModelProcessor#buildFieldMethodInfo` 里 `UNDERSCORE + fieldName`），与《阿里巴巴 Java 开发手册》"方法名统一 lowerCamelCase"冲突 |
+| 2 | **官方生成器不可扩展**：`JoinChainModelProcessor` 的 `generateClass` / `buildFieldMethodInfo` 等生成逻辑全是 `private`，继承只能重写整个 `process()`，等于从零再写一套 |
+| 3 | **自研生成器的代价更大**（已评估并放弃）：本仓库自己的模块**无法进 `annotationProcessorPaths`**（compile 阶段无 jar，解析必失败）→ 只能 classpath 发现；放 `common-datasource` 还会"自扫自报错"（javac 把本模块 target/classes 放进 classpath，读到自带 services 文件时处理器类尚未编译完） |
+| 4 | **JDK 23+ 起隐式注解处理默认关闭**（JDK 21 已给出警告），classpath 发现这条路未来还要再改 |
+| 5 | 两个处理器不能共存（同一注解重复生成 → `Attempt to recreate a file`）；生成器还要跟着 MPJ 版本维护 |
+| 6 | 收益有限：Lambda 版已覆盖绝大多数多表场景，且类型安全 |
+
+#### 因此的约定
+
+- **本工程不引入任何 APT 处理器**（`mybatis-plus-join-processor` 已移除；根 pom 的 `annotationProcessorPaths` 只保留 lombok）
+- 多表查询用 **Lambda 版**（`Joins.of(...)` / `JoinLambdaWrapper`）
+- 复杂报表类 SQL 仍建议手写 XML，MPJ 覆盖常规 join 场景即可
+- 若将来确实要用 chain：需自行引入 processor，并注意上面第 1、2、3、4、5 条
+
+#### 历史记录（供追溯）
+
+- 2026-11-01 初稿：判断 Boot 3 下 MPJ 自动配置"大概率不生效"→ 2026-11-07 实测**生效**（starter jar 自带 `AutoConfiguration.imports`）
+- 2026-11-07：MPJ 2.1.3 引入 `gu-li-mall-common-datasource`；chain 与自研生成器方案经评估后放弃（依据见上表）
 
 ## 四、谷粒商城多表场景映射（基于本仓库 6 份建表脚本）
 
