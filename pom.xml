@@ -72,12 +72,25 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <dependency>
-                <groupId>icu.mhb</groupId>
-                <artifactId>mybatis-plus-join-processor</artifactId>
-                <version>${mybatis-plus-join.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
+    <build>
+        <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>${maven-compiler-plugin.version}</version>
+            <configuration>
+                <annotationProcessorPaths>
+                    <path>
+                        <groupId>icu.mhb</groupId>
+                        <artifactId>mybatis-plus-join-processor</artifactId>
+                        <version>${mybatis-plus-join.version}</version>
+                    </path>
+                </annotationProcessorPaths>
+            </configuration>
+        </plugin>
+        </plugins>
+    </build>
 </project>

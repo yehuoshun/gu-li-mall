@@ -6,6 +6,16 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+      </profile>
+      <profile name="Annotation profile for gu_li_mail" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$PROJECT_DIR$/../../DevelopmentEnvironment/Maven/repository/icu/mhb/mybatis-plus-join-processor/2.1.3/mybatis-plus-join-processor-2.1.3.jar" />
+          <entry name="$PROJECT_DIR$/../../DevelopmentEnvironment/Maven/repository/icu/mhb/mybatis-plus-join-util/2.1.3/mybatis-plus-join-util-2.1.3.jar" />
+          <entry name="$PROJECT_DIR$/../../DevelopmentEnvironment/Maven/repository/icu/mhb/mybatis-plus-join-annotation/2.1.3/mybatis-plus-join-annotation-2.1.3.jar" />
+        </processorPath>
         <module name="gu-li-mall-common-datasource" />
         <module name="gu-li-mall-gateway" />
         <module name="gu-li-mall-coupon" />
@@ -17,8 +27,8 @@
         <module name="gu-li-mall-product" />
         <module name="gu-li-mall-cart" />
         <module name="gu-li-mall-third-part" />
-        <module name="gu-li-mall-order" />
         <module name="gu-li-mall-auth-server" />
+        <module name="gu-li-mall-order" />
       </profile>
     </annotationProcessing>
   </component>
@@ -37,6 +47,7 @@
       <module name="gu-li-mall-seckill" options="-parameters" />
       <module name="gu-li-mall-third-part" options="-parameters" />
       <module name="gu-li-mall-ware" options="-parameters" />
+      <module name="gu_li_mail" options="-parameters" />
     </option>
   </component>
 </project>
