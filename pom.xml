@@ -83,6 +83,13 @@
             <version>${maven-compiler-plugin.version}</version>
             <configuration>
                 <annotationProcessorPaths>
+                    <!-- ⚠️ 一旦显式声明 annotationProcessorPaths，classpath 上的处理器就不再被扫描，
+                         所以 lombok 必须一并列上，否则 @Data/@Getter/@Slf4j 全部失效 -->
+                    <path>
+                        <groupId>org.projectlombok</groupId>
+                        <artifactId>lombok</artifactId>
+                        <version>${lombok.version}</version>
+                    </path>
                     <path>
                         <groupId>icu.mhb</groupId>
                         <artifactId>mybatis-plus-join-processor</artifactId>

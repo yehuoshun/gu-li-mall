@@ -10,7 +10,7 @@ import com.shun.gu_li_mall_common_datasource.handler.MyMetaObjectHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 
 /**
  * MyBatis-Plus 自动配置：分页 / 乐观锁 / 防全表更新删除 + 公共字段填充。
@@ -26,7 +26,7 @@ import org.springframework.context.annotation.Configuration;
  *
  * @author yehuoshun
  */
-@Configuration
+@AutoConfiguration
 @ConditionalOnClass(MybatisPlusInterceptor.class)
 public class MybatisPlusAutoConfiguration {
 
