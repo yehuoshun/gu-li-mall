@@ -6,18 +6,19 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="gu-li-mall-common-datasource" />
         <module name="gu-li-mall-gateway" />
-        <module name="gu-li-mall-search" />
         <module name="gu-li-mall-coupon" />
+        <module name="gu-li-mall-seckill" />
+        <module name="gu-li-mall-member" />
+        <module name="gu-li-mall-ware" />
+        <module name="gu-li-mall-search" />
         <module name="gu-li-mall-common" />
         <module name="gu-li-mall-product" />
         <module name="gu-li-mall-cart" />
-        <module name="gu-li-mall-seckill" />
         <module name="gu-li-mall-third-part" />
-        <module name="gu-li-mall-member" />
         <module name="gu-li-mall-order" />
         <module name="gu-li-mall-auth-server" />
-        <module name="gu-li-mall-ware" />
       </profile>
     </annotationProcessing>
   </component>
@@ -26,6 +27,7 @@
       <module name="gu-li-mall-auth-server" options="-parameters" />
       <module name="gu-li-mall-cart" options="-parameters" />
       <module name="gu-li-mall-common" options="-parameters" />
+      <module name="gu-li-mall-common-datasource" options="-parameters" />
       <module name="gu-li-mall-coupon" options="-parameters" />
       <module name="gu-li-mall-gateway" options="-parameters" />
       <module name="gu-li-mall-member" options="-parameters" />

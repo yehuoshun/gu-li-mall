@@ -50,7 +50,10 @@
         <dependency>
             <groupId>icu.mhb</groupId>
             <artifactId>mybatis-plus-join-boot-starter</artifactId>
-            <version>${mybatis-plus-join.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>icu.mhb</groupId>
+            <artifactId>mybatis-plus-join-processor</artifactId>
         </dependency>
 
         <dependency>
