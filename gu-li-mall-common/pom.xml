@@ -29,9 +29,18 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
         <!-- 全局异常处理用到 @RestControllerAdvice（只引 web 不引容器） -->
+        <!--
+          ⚠️ 这里的 starter-web 是故意的：业务模块统一依赖 gu-li-mall-common，靠它获得 Web 能力（Tomcat + server.port）。
+             gateway 例外——它用 WebFlux，禁止依赖本模块（Tomcat 与 WebFlux 不能共存）。
+        -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <!-- Actuator：/actuator/health 用于连通性/探活（gateway 路由验证、后续 K8s 探针） -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <!-- Jackson（统一 JSON，替代 fastJson） -->
         <dependency>

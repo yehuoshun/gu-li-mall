@@ -44,6 +44,11 @@
             <!-- 内部模块：版本随手工程走（子模块引用时不写 <version>） -->
             <dependency>
                 <groupId>com.shun.gu_li_mail</groupId>
+                <artifactId>gu-li-mall-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.shun.gu_li_mail</groupId>
                 <artifactId>gu-li-mall-common-datasource</artifactId>
                 <version>${project.version}</version>
             </dependency>

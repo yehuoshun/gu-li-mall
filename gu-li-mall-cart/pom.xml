@@ -27,5 +27,14 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
+        <!--
+          公共服务基座：R / BizCodeEnum / 全局异常处理 / 参数校验组（内含 spring-boot-starter-web）
+          说明：业务模块靠它获得 Web 能力（Tomcat + server.port 生效，Nacos 注册才有端口可上报）。
+          ⚠️ gateway 不得依赖本模块（WebMVC/Tomcat 与 WebFlux 冲突）。
+        -->
+        <dependency>
+            <groupId>com.shun.gu_li_mail</groupId>
+            <artifactId>gu-li-mall-common</artifactId>
+        </dependency>
     </dependencies>
 </project>

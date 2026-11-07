@@ -19,6 +19,10 @@
     </properties>
 
     <dependencies>
+        <!--
+          ⚠️ 严禁依赖 gu-li-mall-common：common 带 spring-boot-starter-web（Tomcat/WebMVC），
+             与 Gateway 的 WebFlux 冲突（会启动失败或行为异常）。网关需要的公共能力单独放本模块里。
+        -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
@@ -40,6 +44,11 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+        </dependency>
+        <!-- Actuator：网关自身探活（不要依赖 common，故这里单独引） -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
     </dependencies>
 </project>
