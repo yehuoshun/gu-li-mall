@@ -28,6 +28,9 @@ public class GlobalExceptionHandler {
         e.getBindingResult().getFieldErrors()
                 .forEach(fe -> errors.put(fe.getField(), fe.getDefaultMessage()));
         log.warn("参数校验失败: {}", errors);
+        // 显式泛型见证（type witness）：return 的目标类型传不进方法调用的接收者，
+        // 不写 <Map<String, String>> 时 R.error(...) 被推断为 R<Object>，
+        // 链式 .put(...) 返回 R<Object>，无法赋给 R<Map<String, String>>（编译报错）
         return R.<Map<String, String>>error(BizCodeEnum.VALID_EXCEPTION).put("data", errors);
     }
 
@@ -38,6 +41,7 @@ public class GlobalExceptionHandler {
         e.getBindingResult().getFieldErrors()
                 .forEach(fe -> errors.put(fe.getField(), fe.getDefaultMessage()));
         log.warn("参数绑定校验失败: {}", errors);
+        // 同上：必须有显式泛型见证，否则推断为 R<Object>，链式调用后类型不兼容
         return R.<Map<String, String>>error(BizCodeEnum.VALID_EXCEPTION).put("data", errors);
     }
 
