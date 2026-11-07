@@ -15,8 +15,10 @@ spring:
       # 本地 nacos-win（standalone 单机），主端口默认 8848（Nacos 3.x 控制台改到 8080）
       server-addr: 127.0.0.1:8848
       discovery:
-        namespace: public        # 命名空间：本项目管理重建，统一用默认 public
+        namespace: gu_li_mall     # 命名空间：本项目专用（注册中心与配置中心必须一致）
         group: DEFAULT_GROUP     # 分组：统一默认分组
+      config:
+        namespace: gu_li_mall     # 配置中心命名空间（必须与注册中心一致，否则配置拉不到）
       # 鉴权：Nacos 3.x 默认开启控制台/管控 API 鉴权，客户端注册同样需要账号密码
       # （不开鉴权/2.x 服务端可忽略；占位符写法避免把真实密码提交进仓库）
       # 改过控制台密码时，用环境变量覆盖：IDEA Run Configuration → Environment variables
