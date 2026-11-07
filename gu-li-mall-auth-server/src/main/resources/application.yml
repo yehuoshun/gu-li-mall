@@ -1,4 +1,10 @@
 spring:
+  config:
+    # 配置中心（与注册中心同一个 Nacos 3.x 实例；optional: 保证 Nacos 不可用时降级启动）
+    # 优先级：本地 application.yml > 这里导入的 Nacos 配置（Boot 规则），想让 Nacos 覆盖就别在本地写同名键
+    import:
+      - optional:nacos:gu-li-mall-common.yaml?group=DEFAULT_GROUP&refreshEnabled=true
+      - optional:nacos:gu-li-mall-auth-server.yaml?group=DEFAULT_GROUP&refreshEnabled=true
   application:
     name: gu-li-mall-auth-server
   cloud:

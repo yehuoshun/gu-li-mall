@@ -42,6 +42,15 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
+        <!--
+          Nacos 配置中心（与注册中心同一个 Nacos 实例，共用 server-addr/账号）
+          版本由根 pom 的 spring-cloud-alibaba-dependencies BOM 管。
+          ⚠️ Boot 3 无 bootstrap.yml：必须在 application.yml 里写 spring.config.import（已在各模块写好）。
+        -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+        </dependency>
         <!-- Jackson（统一 JSON，替代 fastJson） -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
