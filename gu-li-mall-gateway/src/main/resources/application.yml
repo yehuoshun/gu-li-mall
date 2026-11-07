@@ -1,0 +1,42 @@
+server:
+  port: 10000
+
+spring:
+  application:
+    name: gu-li-mall-gateway
+  cloud:
+    nacos:
+      # 本地 nacos-win（standalone 单机），主端口默认 8848（Nacos 3.x 控制台改到 8080）
+      server-addr: 127.0.0.1:8848
+      discovery:
+        namespace: public        # 命名空间：本项目管理重建，统一用默认 public
+        group: DEFAULT_GROUP     # 分组：统一默认分组
+      # 若 Nacos 服务端开启鉴权（nacos.core.auth.enabled=true），补下面两行：
+      # username: nacos
+      # password: nacos
+    gateway:
+      server:
+        webflux:
+          # ① 服务名自动路由：http://127.0.0.1:10000/<service-id>/**
+          #    实测生效前缀（Spring Cloud Gateway 4.3 起）：spring.cloud.gateway.server.webflux.*
+          #    旧前缀 spring.cloud.gateway.* 已标记 deprecated（4.3.0 起），勿再使用
+          discovery:
+            locator:
+              enabled: true
+              lower-case-service-id: true
+          # ② 显式路由（模板，前缀口径确认后再放开）
+          #    注意：lb:// 需要 spring-cloud-starter-loadbalancer（已在 pom 引入）
+          #    StripPrefix 的层数要跟着 API 前缀设计走，乱写会 404
+          # routes:
+          #   - id: product
+          #     uri: lb://gu-li-mall-product
+          #     predicates:
+          #       - Path=/api/product/**
+          #     filters:
+          #       - StripPrefix=2
+          #   - id: member
+          #     uri: lb://gu-li-mall-member
+          #     predicates:
+          #       - Path=/api/member/**
+          #     filters:
+          #       - StripPrefix=2

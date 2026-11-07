@@ -31,5 +31,15 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-gateway</artifactId>
         </dependency>
+        <!--
+          负载均衡器：Gateway 的 lb:// 路由（含服务名自动路由）必需。
+          注：Spring Cloud 2020+ 移除了 Ribbon，lb:// 依赖这个 starter；
+          nacos-discovery 不会再自动带它，漏了会在请求时报「找不到实例/LoadBalancer 未配置」。
+          版本由根 pom 的 spring-cloud-dependencies BOM 管，不写 <version>。
+        -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+        </dependency>
     </dependencies>
 </project>
