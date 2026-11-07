@@ -1,5 +1,11 @@
 spring:
   application:
     name: gu-li-mall-coupon
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # 本地 MySQL 8（连接参数：UTF-8 / 时区 / 关 SSL / 允许 caching_sha2_password 公钥获取）
+    url: jdbc:mysql://127.0.0.1:3306/gu_li_mall_sms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: root
 server:
   port: 10030

@@ -39,6 +39,20 @@
         <version>3.5.16</version>
     </parent>
 
+    <!--
+      APT（注解处理器）必须「声明在真正编译实体的模块」才生效：处理器是编译期按模块跑的，
+      且 provided 作用域不传递——只放在 common-datasource 里，业务模块的实体上写 @JoinChainModel 也不会生成链式类。
+      放根 pom 的 <dependencies> 一句覆盖全部 13 个模块；provided 不会被包进产物。
+      作用：为标了 @JoinChainModel 的实体生成 XxxChain（链式模式，MPJ 新特性）；没标的模块该处理器空跑。
+    -->
+    <dependencies>
+        <dependency>
+            <groupId>icu.mhb</groupId>
+            <artifactId>mybatis-plus-join-processor</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
     <dependencyManagement>
         <dependencies>
             <!-- 内部模块：版本随手工程走（子模块引用时不写 <version>） -->
@@ -75,7 +89,7 @@
             <dependency>
                 <groupId>icu.mhb</groupId>
                 <artifactId>mybatis-plus-join-processor</artifactId>
-                <version>${mybatis-plus.version}</version>
+                <version>${mybatis-plus-join.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
