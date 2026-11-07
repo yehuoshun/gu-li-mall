@@ -15,20 +15,78 @@
           <entry name="$PROJECT_DIR$/../../DevelopmentEnvironment/Maven/repository/icu/mhb/mybatis-plus-join-processor/2.1.3/mybatis-plus-join-processor-2.1.3.jar" />
           <entry name="$PROJECT_DIR$/../../DevelopmentEnvironment/Maven/repository/icu/mhb/mybatis-plus-join-util/2.1.3/mybatis-plus-join-util-2.1.3.jar" />
           <entry name="$PROJECT_DIR$/../../DevelopmentEnvironment/Maven/repository/icu/mhb/mybatis-plus-join-annotation/2.1.3/mybatis-plus-join-annotation-2.1.3.jar" />
+          <entry name="$PROJECT_DIR$/../../DevelopmentEnvironment/Maven/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+          <entry name="$PROJECT_DIR$/../../DevelopmentEnvironment/Maven/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
         </processorPath>
-        <module name="gu-li-mall-common-datasource" />
         <module name="gu-li-mall-gateway" />
-        <module name="gu-li-mall-coupon" />
-        <module name="gu-li-mall-seckill" />
-        <module name="gu-li-mall-member" />
-        <module name="gu-li-mall-ware" />
         <module name="gu-li-mall-search" />
         <module name="gu-li-mall-common" />
-        <module name="gu-li-mall-product" />
         <module name="gu-li-mall-cart" />
         <module name="gu-li-mall-third-part" />
         <module name="gu-li-mall-auth-server" />
+      </profile>
+      <profile name="Annotation profile for gu-li-mall-common-datasource" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$PROJECT_DIR$/../../DevelopmentEnvironment/Maven/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+        </processorPath>
+        <module name="gu-li-mall-common-datasource" />
+      </profile>
+      <profile name="Annotation profile for gu-li-mall-coupon" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$PROJECT_DIR$/../../DevelopmentEnvironment/Maven/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+        </processorPath>
+        <module name="gu-li-mall-coupon" />
+      </profile>
+      <profile name="Annotation profile for gu-li-mall-member" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$PROJECT_DIR$/../../DevelopmentEnvironment/Maven/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+        </processorPath>
+        <module name="gu-li-mall-member" />
+      </profile>
+      <profile name="Annotation profile for gu-li-mall-order" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$PROJECT_DIR$/../../DevelopmentEnvironment/Maven/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+        </processorPath>
         <module name="gu-li-mall-order" />
+      </profile>
+      <profile name="Annotation profile for gu-li-mall-product" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$PROJECT_DIR$/../../DevelopmentEnvironment/Maven/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+        </processorPath>
+        <module name="gu-li-mall-product" />
+      </profile>
+      <profile name="Annotation profile for gu-li-mall-seckill" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$PROJECT_DIR$/../../DevelopmentEnvironment/Maven/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+        </processorPath>
+        <module name="gu-li-mall-seckill" />
+      </profile>
+      <profile name="Annotation profile for gu-li-mall-ware" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$PROJECT_DIR$/../../DevelopmentEnvironment/Maven/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+        </processorPath>
+        <module name="gu-li-mall-ware" />
       </profile>
     </annotationProcessing>
   </component>
