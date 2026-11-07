@@ -97,7 +97,7 @@ List<UserVo> list = userMapper.joinSelectList(wrapper, UserVo.class);
 ### 2.3 版本号迷雾（写进这里留档）
 
 - 官网首页写 `2.1.3`，安装页与 Maven Central 实际最新是 **2.1.0**；Gitee README 的版本表里 2.1.3 存在但 Central 未同步。
-- **统一口径：以 Maven Central 可拉取的 2.1.0 为准**（2.1.3 若私有仓才有，引入成本不值）。
+- ~~**统一口径：以 Maven Central 可拉取的 2.1.0 为准**~~ → **已过时**：实测 2.1.3 在 Central 可拉（见 §〇.1）。
 
 ### 2.4 Boot 3 下的应对（按优先序）
 
@@ -126,11 +126,11 @@ List<UserVo> list = userMapper.joinSelectList(wrapper, UserVo.class);
   <artifactId>mybatis-plus-join-boot-starter</artifactId>
   <version>2.1.0</version>
 </dependency>
-<!-- APT 链式模式（可选，用于类型安全链式调用） -->
+<!-- APT 链式模式（可选）——【本工程不采用，见 §三.1 决策】 -->
 <dependency>
   <groupId>icu.mhb</groupId>
   <artifactId>mybatis-plus-join-processor</artifactId>
-  <version>2.1.0</version>
+  <version>2.1.3</version>
 </dependency>
 ```
 
