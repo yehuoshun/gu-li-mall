@@ -72,6 +72,8 @@ List<UserVo> list = userMapper.joinSelectList(wrapper, UserVo.class);
 
 ## 二、版本兼容性（关键结论）
 
+> ⚠️ **本节 2.2 / 2.3 的"Boot 3 风险"与"Central 只有 2.1.0"等判断已被实测推翻，保留供追溯；以 §〇.1 与 §三.1 为准。**
+
 ### 2.1 MP 版本对应（官方 README 版本表）
 
 | MyBatis-Plus       | 可用 MPJ 版本                                                     |
@@ -257,7 +259,7 @@ new MPJLambdaWrapper<>(CouponEntity.class)
 3. **别名与字段冲突**：两表同名字段要显式 `select` 指定，避免结果集覆盖。
 4. **逻辑删除/多租户**：官方称兼容，但组合使用场景少，试点时要专门验证。
 5. **`@TableField(exist=false)`** 实体扩展字段的行为需在试点中确认（影响 selectCollection 映射）。
-6. **APT processor 与 lombok 顺序**：若用 2.x APT 链式模式，注解处理器配置要正确，否则编译期不生成链式类——**初期可只用 Lambda 模式（processor 可不引）**，降低风险。
+6. ~~APT processor 与 lombok 顺序~~：**已决定不用 chain / 不引 processor**（2026-11-07），本工程统一走 Lambda 版；若将来重启该方案，注意 processor 与 lombok 在 `annotationProcessorPaths` 中必须并列，且本仓库自己的模块进不了 paths。
 7. **与手写 XML 的关系**：复杂报表/超级大 join 仍建议手写 SQL，MPJ 覆盖 80% 场景即可，别硬套。
 
 ---
