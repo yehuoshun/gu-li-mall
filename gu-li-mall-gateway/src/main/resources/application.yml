@@ -11,9 +11,12 @@ spring:
       discovery:
         namespace: public        # 命名空间：本项目管理重建，统一用默认 public
         group: DEFAULT_GROUP     # 分组：统一默认分组
-      # 若 Nacos 服务端开启鉴权（nacos.core.auth.enabled=true），补下面两行：
-      # username: nacos
-      # password: nacos
+      # 鉴权：Nacos 3.x 默认开启控制台/管控 API 鉴权，客户端注册同样需要账号密码
+      # （不开鉴权/2.x 服务端可忽略；占位符写法避免把真实密码提交进仓库）
+      # 改过控制台密码时，用环境变量覆盖：IDEA Run Configuration → Environment variables
+      #   NACOS_USERNAME=xxx;NACOS_PASSWORD=xxx
+      username: ${NACOS_USERNAME:nacos}
+      password: ${NACOS_PASSWORD:nacos}
     gateway:
       server:
         webflux:
