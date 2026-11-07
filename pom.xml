@@ -8,8 +8,15 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>gu_li_mail</name>
     <description>谷粒商城</description>
+
+    <properties>
+        <!-- MyBatis-Plus：3.5.x 系列，Boot 3 用 spring-boot3-starter（已核实 Maven Central 最新 3.5.18，2026-10-27） -->
+        <mybatis-plus.version>3.5.18</mybatis-plus.version>
+    </properties>
+
     <modules>
         <module>gu-li-mall-common</module>
+        <module>gu-li-mall-common-datasource</module>
         <module>gu-li-mall-gateway</module>
         <module>gu-li-mall-product</module>
         <module>gu-li-mall-member</module>
@@ -32,6 +39,12 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- 内部模块：版本随手工程走（子模块引用时不写 <version>） -->
+            <dependency>
+                <groupId>com.shun.gu_li_mail</groupId>
+                <artifactId>gu-li-mall-common-datasource</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>
@@ -43,6 +56,17 @@
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
                 <version>2025.0.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!--
+              MyBatis-Plus BOM：统一管 MP 全家桶版本（starter / jsqlparser / generator 等）
+              ⚠️ 必须带 <scope>import</scope>，否则整段无效
+            -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-bom</artifactId>
+                <version>${mybatis-plus.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

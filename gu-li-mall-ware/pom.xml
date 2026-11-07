@@ -26,5 +26,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
+
+        <!-- 数据源基座：MyBatis-Plus + MySQL 驱动 + BaseEntity/分页/乐观锁/自动填充（版本由根 pom 管理） -->
+        <dependency>
+            <groupId>com.shun.gu_li_mail</groupId>
+            <artifactId>gu-li-mall-common-datasource</artifactId>
+        </dependency>
     </dependencies>
 </project>
