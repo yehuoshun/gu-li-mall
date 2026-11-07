@@ -126,19 +126,63 @@ List<UserVo> list = userMapper.joinSelectList(wrapper, UserVo.class);
   <artifactId>mybatis-plus-join-boot-starter</artifactId>
   <version>2.1.0</version>
 </dependency>
-<!-- APT 链式模式（可选）——【本工程不采用，见 §三.1 决策】 -->
+<!-- APT 链式模式（可选）——【本工程采用自编译 2.1.3-nameFix，见 §三.1】
+     注意：processor 不放模块依赖，放根 pom 的 annotationProcessorPaths（见 §三.1 落地方式） -->
 <dependency>
   <groupId>icu.mhb</groupId>
   <artifactId>mybatis-plus-join-processor</artifactId>
-  <version>2.1.3</version>
+  <version>2.1.3-nameFix</version>
 </dependency>
 ```
 
 ---
 
-### 三.1 chain 链式模式：**不采用**（2026-11-07 决策）
+### 三.1 chain 链式模式：**采用**（2026-11-07 晚更新，自编译 nameFix 版）
 
-**结论：不用 MPJ 的 chain（链式模式），也不用任何注解处理器（APT）。多表查询统一走 Lambda 版。**
+**结论：chain 链式模式启用，用自编译的 `icu.mhb:*:2.1.3-nameFix`。**
+
+背景：官方生成器的 `_id()` 下划线命名问题（见下方历史决策表第 1 条）已通过 **fork 生成器**解决，
+不需要自研处理器——fork：`yehuoshun/mybatis-plus-join`，分支 `nameFix`。
+
+#### 命名开关（fork 新增）
+
+`@JoinChainModel` 新增 `fieldMethodNaming` 属性（枚举 `JoinChainModel.FieldMethodNaming`），
+**默认值保持 `UNDERSCORE_PREFIX`（即 `_id()`），完全向后兼容**：
+
+```java
+// ① 新写法：字段引用方法带 Field 后缀，符合 lowerCamelCase 规范
+@JoinChainModel(fieldMethodNaming = JoinChainModel.FieldMethodNaming.FIELD_SUFFIX)
+public class SpuInfo { /* id, spuName, brandId ... */ }
+
+// ② 不写 = 官方原味（_id() / _spuName() / _brandId()），老代码零改动
+@JoinChainModel
+public class LegacyEntity { }
+```
+
+生成物实测（沙箱 clean compile 验证，2026-11-07）：
+
+| 注解 | 生成方法 |
+|---|---|
+| `@JoinChainModel(fieldMethodNaming = FIELD_SUFFIX)` | `idField()` / `spuNameField()` / `deptIdField()` → 返回 `ChainFieldData` |
+| `@JoinChainModel`（默认） | `_id()` / `_spuName()` / `_deptId()` |
+
+设值方法（`id(Object)` / `id()`）与静态入口（`create()`）两种模式都一样。
+
+#### 落地方式
+
+- 版本：根 pom `<mybatis-plus-join.version>2.1.3-nameFix</mybatis-plus-join.version>`，starter 与 processor 共用该属性
+- **processor 放根 pom `maven-compiler-plugin` 的 `annotationProcessorPaths`**，与 lombok **并列**（显式声明会关闭 classpath 扫描，漏 lombok 就全模块挂；漏 processor 就静默不生成），覆盖全部 13 模块、不进产物
+- 沙箱验证：13 模块 `mvn clean compile` **BUILD SUCCESS**；探针实体生成 `entity/chain/XxxChain.java`（探针已删，未入库）
+
+#### ⚠️ 两个必须知道的坑
+
+1. **nameFix 不在 Maven Central**：本地/CI 的 Maven 仓库里必须有 `icu/mhb/*/2.1.3-nameFix/*`（`mvn install` fork 得到，或解压预编译产物 zip）；否则 `mvn compile` 直接报找不到坐标。
+2. **fork 只能用 JDK 8 编译**：其 lombok 1.18.10 只兼容 JDK 8~11；用 JDK 17/21 编会满屏「找不到符号」（`IllegalAccessError: LombokProcessor cannot access com.sun.tools.javac.processing.JavacProcessingEnvironment`）。
+3. **IDEA 侧**：IDEA 的注解处理器配置是从 Maven 导入的（`.idea/compiler.xml` 里按模块生成 profile）。改完 pom **必须 Reload Maven Project**，否则 profile 里只有 lombok → IDE 内编译不生成 Chain 类 → 满屏 `找不到符号 XxxChain`。刷新后对应模块的 processor path 应出现 `icu/mhb/mybatis-plus-join-processor/2.1.3-nameFix/...jar`。
+
+#### 两种模式并存
+
+chain 用于需要「类型安全引用字段」的场景；常规单表 + 简单 join 继续用 Lambda 版（用例见下一段）。
 
 用法（已实测，Boot 3.5.16 + MP 3.5.18 + MPJ 2.1.3）：
 
@@ -158,7 +202,9 @@ List<SpuInfoVo> list = spuInfoMapper.joinSelectList(wrapper, SpuInfoVo.class);  
 // 分页：spuInfoMapper.joinSelectPage(new Page<>(1, 10), wrapper, SpuInfoVo.class)
 ```
 
-#### 为什么不用 chain（决策依据）
+#### 为什么当初评估后暂缓（历史依据，已被 nameFix 方案取代）
+
+> 下表是 2026-11-07 白天「不采用 chain」时的评估记录，**保留供追溯**；当晚 fork 方案落地后第 1 条已被解决，第 3 条（自研）不再是问题。
 
 | # | 原因 |
 |---|---|
@@ -171,15 +217,18 @@ List<SpuInfoVo> list = spuInfoMapper.joinSelectList(wrapper, SpuInfoVo.class);  
 
 #### 因此的约定
 
-- **本工程不引入任何 APT 处理器**（`mybatis-plus-join-processor` 已移除；根 pom 的 `annotationProcessorPaths` 只保留 lombok）
-- 多表查询用 **Lambda 版**（`Joins.of(...)` / `JoinLambdaWrapper`）
+- **本工程引入 APT 处理器**：根 pom `annotationProcessorPaths` = lombok + `icu.mhb:mybatis-plus-join-processor:${mybatis-plus-join.version}`（2.1.3-nameFix）
+- 需要链式 API 的实体标 `@JoinChainModel(fieldMethodNaming = FIELD_SUFFIX)`；不需要的实体不用标（处理器只处理标了注解的类）
+- 多表查询两条路并存：**chain 链式**（`Joins.chain(...)` → `JoinChainQueryWrapper`）与 **Lambda 版**（`Joins.of(...)` / `JoinLambdaWrapper`）
 - 复杂报表类 SQL 仍建议手写 XML，MPJ 覆盖常规 join 场景即可
-- 若将来确实要用 chain：需自行引入 processor，并注意上面第 1、2、3、4、5 条
+- 换机器/换 CI：先确认本地仓库有 `2.1.3-nameFix` 产物，再 `mvn clean compile`
 
 #### 历史记录（供追溯）
 
 - 2026-11-01 初稿：判断 Boot 3 下 MPJ 自动配置"大概率不生效"→ 2026-11-07 实测**生效**（starter jar 自带 `AutoConfiguration.imports`）
-- 2026-11-07：MPJ 2.1.3 引入 `gu-li-mall-common-datasource`；chain 与自研生成器方案经评估后放弃（依据见上表）
+- 2026-11-07：MPJ 2.1.3 引入 `gu-li-mall-common-datasource`；chain 与自研生成器方案经评估后一度放弃（依据见上表）
+- 2026-11-07 晚：fork `bobo667/mybatis-plus-join` → `yehuoshun/mybatis-plus-join`，加 `fieldMethodNaming`（PR #13），自编译 `2.1.3-nameFix` 并重新启用 chain（见上方 §三.1）
+- 2026-11-07 晚：根 pom 版本改 `2.1.3-nameFix` + `annotationProcessorPaths` 补 processor，沙箱 13 模块 clean compile 通过
 
 ## 四、谷粒商城多表场景映射（基于本仓库 6 份建表脚本）
 
@@ -259,7 +308,7 @@ new MPJLambdaWrapper<>(CouponEntity.class)
 3. **别名与字段冲突**：两表同名字段要显式 `select` 指定，避免结果集覆盖。
 4. **逻辑删除/多租户**：官方称兼容，但组合使用场景少，试点时要专门验证。
 5. **`@TableField(exist=false)`** 实体扩展字段的行为需在试点中确认（影响 selectCollection 映射）。
-6. ~~APT processor 与 lombok 顺序~~：**已决定不用 chain / 不引 processor**（2026-11-07），本工程统一走 Lambda 版；若将来重启该方案，注意 processor 与 lombok 在 `annotationProcessorPaths` 中必须并列，且本仓库自己的模块进不了 paths。
+6. APT processor 与 lombok：**已采用 chain**（2026-11-07 晚，nameFix）；两者在根 pom `annotationProcessorPaths` 中必须**并列**（显式声明会关闭 classpath 扫描，漏 lombok 则 `@Slf4j` 全失效，漏 processor 则 Chain 类不生成）。本仓库自己的模块仍进不了 paths，所以 fork 方案是把生成器发布到本地仓库后**当第三方处理器**用。
 7. **与手写 XML 的关系**：复杂报表/超级大 join 仍建议手写 SQL，MPJ 覆盖 80% 场景即可，别硬套。
 
 ---

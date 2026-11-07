@@ -84,15 +84,28 @@
             <configuration>
                 <annotationProcessorPaths>
                     <!--
-                      只保留 lombok。
-                      说明：显式声明 annotationProcessorPaths 会关闭 classpath 上的处理器扫描，
-                      所以 lombok 必须列在这里；MPJ 的 chain 生成器（mybatis-plus-join-processor）
-                      已按 2026-11-07 的决策移除——链式模式不用，统一走 Lambda 版 JoinLambdaWrapper。
+                      ⚠️ 显式声明 annotationProcessorPaths 会关闭 classpath 上的处理器扫描，
+                      所以所有需要的处理器都必须在这里列全（漏一个就静默不跑）。
+
+                      1) lombok —— 必须显式列，否则 @Slf4j/@Data 全部失效。
+                      2) mybatis-plus-join-processor —— chain 链式模式（@JoinChainModel）的 APT 生成器。
+                         2026-11-07 晚改用自编译的 2.1.3-nameFix（fork: yehuoshun/mybatis-plus-join），
+                         它给 @JoinChainModel 加了 fieldMethodNaming，避免官方硬编码的 _id() 下划线命名：
+                           @JoinChainModel(fieldMethodNaming = FIELD_SUFFIX) → idField()
+                           @JoinChainModel（默认）                        → _id()（向后兼容）
+                         版本用 ${mybatis-plus-join.version}，与 starter 保持一致。
+                         说明：处理器是「编译期 + 按模块」生效，放根 pom 的 annotationProcessorPaths
+                         即可覆盖全部 13 个模块，不必（也不会）进业务模块的运行时依赖。
                     -->
                     <path>
                         <groupId>org.projectlombok</groupId>
                         <artifactId>lombok</artifactId>
                         <version>${lombok.version}</version>
+                    </path>
+                    <path>
+                        <groupId>icu.mhb</groupId>
+                        <artifactId>mybatis-plus-join-processor</artifactId>
+                        <version>${mybatis-plus-join.version}</version>
                     </path>
                 </annotationProcessorPaths>
             </configuration>
